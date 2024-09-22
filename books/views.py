@@ -1,12 +1,14 @@
 from datetime import datetime
 
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
+from books.helpers import NavigationDates
 from books.models import Book
 
 
 def books_view(request):
-    return redirect('books/')
+    return redirect(reverse('catalog'))
 
 def catalog_view(request):
     books = Book.objects.all()
@@ -17,7 +19,7 @@ def catalog_view(request):
 def same_date_books_view(request, date: datetime.date):
     template = 'books/books_same_date.html'
     books = Book.objects.filter(pub_date=date)
-    dates = sorted(Book.objects.values_list('pub_date', flat=True).distinct('pub_date'))
+    dates = NavigationDates().dates
 
     len_dates = len(dates) - 1
     curr_date_id = dates.index(date)
